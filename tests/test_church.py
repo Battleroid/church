@@ -16,18 +16,6 @@ from test_data.test_sciense import ScienceTestCase
 from test_data.test_text import TextTestCase
 
 
-class EnglishBase(DummyCase):
-    LANG = 'en'
-
-
-class GermanBase(DummyCase):
-    LANG = 'de'
-
-
-class RussianBase(DummyCase):
-    LANG = 'ru'
-
-
 class ChurchBase(DummyCase):
 
     def setUp(self):
@@ -58,22 +46,43 @@ class ChurchBase(DummyCase):
         self.assertIsNotNone(result)
 
 
-class ChurchEnglishTestCase(EnglishBase, ChurchBase, AddressTestCase,
-                            BusinessTestCase, DatetimeTestCase, FoodTestCase,
-                            PersonalTestCase, ScienceTestCase, TextTestCase,
-                            TestCase):
+class ChurchLocaleBase(ChurchBase, AddressTestCase, BusinessTestCase,
+                       DatetimeTestCase, FoodTestCase, PersonalTestCase,
+                       ScienceTestCase, TextTestCase):
     pass
 
 
-class ChurchGermanTestCase(GermanBase, ChurchBase, AddressTestCase,
-                           BusinessTestCase, DatetimeTestCase, FoodTestCase,
-                           PersonalTestCase, ScienceTestCase, TextTestCase,
-                           TestCase):
-    pass
+class ChurchEnglishTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'en'
 
 
-class ChurchRussianTestCase(RussianBase, ChurchBase, AddressTestCase,
-                            BusinessTestCase, DatetimeTestCase, FoodTestCase,
-                            PersonalTestCase, ScienceTestCase, TextTestCase,
-                            TestCase):
-    pass
+class ChurchGermanTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'de'
+
+
+class ChurchRussianTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'ru'
+
+
+class ChurchDanishTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'da'
+
+
+class ChurchFrenchTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'fr'
+
+
+class ChurchSpanishTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'es'
+
+
+class ChurchItalianTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'it'
+
+
+class ChurchPortugueseTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'pt-br'
+
+
+class ChurchNorwegianTestCase(ChurchLocaleBase, TestCase):
+    LANG = 'no'
