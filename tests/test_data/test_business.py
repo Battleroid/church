@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import church._common as common
-from church.utils import pull
 
 from . import DummyCase
 
@@ -9,12 +8,16 @@ from . import DummyCase
 class BusinessTestCase(DummyCase):
     def test_company_type(self):
         result = self.church.business.company_type()
-        self.assertTrue(len(result) > 8)
+        self.assertIn(result,
+                      self.church.business.data['company']['type']['title'])
+
+        result_2 = self.church.business.company_type(abbr=True)
+        self.assertIn(result_2,
+                      self.church.business.data['company']['type']['abbr'])
 
     def test_company(self):
         result = self.church.business.company()
-        parent_file = pull('company', self.church.business.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.business.data['company']['name'])
 
     def test_copyright(self):
         result = self.church.business.copyright()

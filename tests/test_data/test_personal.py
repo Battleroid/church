@@ -3,7 +3,6 @@
 import re
 
 import church._common as common
-from church.utils import pull
 
 from . import DummyCase
 
@@ -14,13 +13,11 @@ class PersonalTestCase(DummyCase):
         self.assertTrue(result <= 55)
 
     def test_name(self):
-        result = self.church.personal.name()
-        parent_file = pull('f_names', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        result = self.church.personal.name(gender='female')
+        self.assertIn(result, self.church.personal.data['names']['female'])
 
-        result = self.church.personal.name('m')
-        parent_file = pull('m_names', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        result = self.church.personal.name(gender='male')
+        self.assertIn(result, self.church.personal.data['names']['male'])
 
     def test_telephone(self):
         result = self.church.personal.telephone()
@@ -33,20 +30,19 @@ class PersonalTestCase(DummyCase):
 
     def test_surname(self):
         if self.church.personal.lang == 'ru':
-            result = self.church.personal.surname('f')
-            parent_file = pull('f_surnames', self.church.personal.lang)
-            self.assertIn(result + '\n', parent_file)
+            result = self.church.personal.surname(gender='female')
+            self.assertIn(result,
+                          self.church.personal.data['surnames']['female'])
 
-            result = self.church.personal.surname('m')
-            parent_file = pull('m_surnames', self.church.personal.lang)
-            self.assertIn(result + '\n', parent_file)
+            result = self.church.personal.surname(gender='male')
+            self.assertIn(result,
+                          self.church.personal.data['surnames']['male'])
         else:
             result = self.church.personal.surname()
-            parent_file = pull('surnames', self.church.personal.lang)
-            self.assertIn(result + '\n', parent_file)
+            self.assertIn(result, self.church.personal.data['surnames'])
 
     def test_full_name(self):
-        result = self.church.personal.full_name('f')
+        result = self.church.personal.full_name(gender='female')
         _result = result.split(' ')
         self.assertIsInstance(_result, list)
 
@@ -54,21 +50,18 @@ class PersonalTestCase(DummyCase):
         result = self.church.personal.username()
         self.assertTrue(re.match(r'^[a-zA-Z0-9_.-]+$', result))
 
-        result = self.church.personal.username('f')
-        self.assertTrue(re.match(r'^[a-zA-Z0-9_.-]+$', result))
-
     def test_twitter(self):
-        result = self.church.personal.twitter('f')
+        result = self.church.personal.twitter(gender='female')
         self.assertIsNotNone(result)
 
-        _result = self.church.personal.twitter('m')
+        _result = self.church.personal.twitter(gender='male')
         self.assertIsNotNone(_result)
 
     def test_facebook(self):
-        result = self.church.personal.facebook('f')
+        result = self.church.personal.facebook(gender='female')
         self.assertIsNotNone(result)
 
-        _result = self.church.personal.facebook('m')
+        _result = self.church.personal.facebook(gender='female')
         self.assertIsNotNone(_result)
 
     def test_wmid(self):
@@ -146,19 +139,19 @@ class PersonalTestCase(DummyCase):
         self.assertTrue((1000 <= result) and (result <= 9999))
 
     def test_gender(self):
-        result = self.church.personal.gender() + '\n'
-        self.assertIn(result, pull('gender', self.church.personal.lang))
+        result = self.church.personal.gender()
+        self.assertIn(result, self.church.personal.data['gender'])
 
         symbol = self.church.personal.gender(symbol=True)
         self.assertIn(symbol, common.GENDER_SYMBOLS)
 
     def test_height(self):
-        result = self.church.personal.height(from_=1.60, to_=1.90)
+        result = self.church.personal.height(from_=1.60, to=1.90)
         self.assertTrue(result.startswith('1'))
         self.assertIsInstance(result, str)
 
     def test_weight(self):
-        result = self.church.personal.weight(from_=40, to_=60)
+        result = self.church.personal.weight(from_=40, to=60)
         self.assertTrue((result >= 40) and (result <= 60))
 
     def test_blood_type(self):
@@ -167,36 +160,30 @@ class PersonalTestCase(DummyCase):
 
     def test_sexual_orientation(self):
         result = self.church.personal.sexual_orientation()
-        parent_file = pull('sexuality', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['sexuality'])
 
         symbol = self.church.personal.sexual_orientation(symbol=True)
         self.assertIn(symbol, common.SEXUALITY_SYMBOLS)
 
     def test_profession(self):
-        result = self.church.personal.profession()
-        parent_file = pull('professions', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        result = self.church.personal.occupation()
+        self.assertIn(result, self.church.personal.data['occupation'])
 
     def test_university(self):
         result = self.church.personal.university()
-        parent_file = pull('university', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['university'])
 
-    def test_qualification(self):
-        result = self.church.personal.qualification()
-        parent_file = pull('qualifications', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+    def test_academic_degree(self):
+        result = self.church.personal.academic_degree()
+        self.assertIn(result, self.church.personal.data['academic_degree'])
 
     def test_language(self):
         result = self.church.personal.language()
-        parent_file = pull('languages', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['language'])
 
     def test_favorite_movie(self):
         result = self.church.personal.favorite_movie()
-        parent_file = pull('movies', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['favorite_movie'])
 
     def test_favorite_music_genre(self):
         result = self.church.personal.favorite_music_genre()
@@ -204,18 +191,15 @@ class PersonalTestCase(DummyCase):
 
     def test_worldview(self):
         result = self.church.personal.worldview()
-        parent_file = pull('worldview', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['worldview'])
 
     def test_views_on(self):
         result = self.church.personal.views_on()
-        parent_file = pull('views_on', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['views_on'])
 
     def test_political_views(self):
         result = self.church.personal.political_views()
-        parent_file = pull('political_views', self.church.personal.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.personal.data['political_views'])
 
     def test_avatar(self):
         result = self.church.personal.avatar()

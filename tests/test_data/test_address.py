@@ -2,23 +2,21 @@
 
 import re
 
-from church.utils import pull
+from . import DummyCase
 
 
-class AddressTestCase:
+class AddressTestCase(DummyCase):
     def test_street_number(self):
         result = self.church.address.street_number()
         self.assertTrue(re.match(r'[0-9]{1,5}$', result))
 
     def test_street_name(self):
         result = self.church.address.street_name()
-        parent_file = pull('streets', self.church.address.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.address.data['street']['name'])
 
     def test_street_suffix(self):
         result = self.church.address.street_suffix()
-        parent_file = pull('st_suffix', self.church.address.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.address.data['street']['suffix'])
 
     def test_address(self):
         result = self.church.address.address()
@@ -26,8 +24,7 @@ class AddressTestCase:
 
     def test_state(self):
         result = self.church.address.state()
-        parent_file = pull('states', self.church.address.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.address.data['state']['name'])
 
     def test_postal_code(self):
         result = self.church.address.postal_code()
@@ -37,16 +34,16 @@ class AddressTestCase:
             self.assertTrue(re.match(r'[0-9]{5}$', str(result)))
 
     def test_country(self):
-        result = self.church.address.country() + '\n'
-        self.assertTrue(len(result) > 3)
+        result = self.church.address.country()
+        self.assertTrue(self.church.address.data['country']['name'], result)
 
-        result2 = self.church.address.country(only_iso_code=True) + '\n'
-        self.assertTrue(len(result2) < 4)
+        result2 = self.church.address.country(iso_code=True)
+        self.assertTrue(self.church.address.data['country']['iso_code'],
+                        result2)
 
     def test_city(self):
         result = self.church.address.city()
-        parent_file = pull('cities', self.church.address.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.address.data['city'])
 
     def test_latitude(self):
         result = self.church.address.latitude()

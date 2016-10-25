@@ -1,29 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from church import _common as common
-from church.utils import pull
 
 from . import DummyCase
 
 
 class TextTestCase(DummyCase):
     def test_sentence(self):
-        result = self.church.text.sentence() + '\n'
-        parent_file = pull('text', self.church.text.lang)
-        self.assertIn(result, parent_file)
+        result = self.church.text.sentence()
+        self.assertIn(result.strip(), self.church.text.data['text'])
 
     def test_title(self):
-        result = self.church.text.title() + '\n'
-        parent_file = pull('text', self.church.text.lang)
-        self.assertIn(result, parent_file)
+        result = self.church.text.title()
+        self.assertIn(result.strip(), self.church.text.data['text'])
 
     def test_lorem_ipsum(self):
-        result = self.church.text.lorem_ipsum(quantity=2)
-        self.assertIsNot(result, None)
+        result = self.church.text.lorem_ipsum(quantity=4)
+        self.assertTrue(len(result) >= 4)
         self.assertIsInstance(result, str)
 
     def test_words(self):
-        result = self.church.text.words()
+        result = self.church.text.words(quantity=5)
         self.assertEqual(len(result), 5)
 
         result = self.church.text.words(quantity=1)
@@ -31,28 +28,24 @@ class TextTestCase(DummyCase):
 
     def test_word(self):
         result = self.church.text.word()
-        parent_file = pull('words', self.church.text.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.text.data['words']['normal'])
 
     def test_swear_word(self):
         result = self.church.text.swear_word()
-        parent_file = pull('swear_words', self.church.text.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.text.data['words']['bad'])
 
     def test_naughty_strings(self):
         result = self.church.text.naughty_strings()
         self.assertTrue(len(result) > 10)
         self.assertIsInstance(result, list)
 
-    def test_quote_from_movie(self):
+    def test_quote(self):
         result = self.church.text.quote()
-        parent_file = pull('quotes', self.church.text.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.text.data['quotes'])
 
     def test_color(self):
         result = self.church.text.color()
-        parent_file = pull('colors', self.church.text.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.text.data['color'])
 
     def test_hex_color(self):
         result = self.church.text.hex_color()

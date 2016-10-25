@@ -5,6 +5,8 @@ from unittest import TestCase
 from church import Church
 
 from test_data import DummyCase
+
+# all locale dependent cases
 from test_data.test_address import AddressTestCase
 from test_data.test_business import BusinessTestCase
 from test_data.test_datetime import DatetimeTestCase

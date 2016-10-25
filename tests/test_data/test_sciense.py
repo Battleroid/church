@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import church._common as common
-from church.utils import pull
 
 from . import DummyCase
 
@@ -11,15 +10,13 @@ class ScienceTestCase(DummyCase):
         result = self.church.science.math_formula()
         self.assertIn(result, common.MATH_FORMULAS)
 
-    def test_article_on_wiki(self):
-        result = self.church.science.article_on_wiki()
-        parent_file = pull('science_wiki', self.church.science.lang)
-        self.assertIn(result + '\n', parent_file)
+    def test_scientific_article(self):
+        result = self.church.science.scientific_article()
+        self.assertIn(result, self.church.science._data['article'])
 
     def test_scientist(self):
         result = self.church.science.scientist()
-        parent_file = pull('scientist', self.church.science.lang)
-        self.assertIn(result + '\n', parent_file)
+        self.assertIn(result, self.church.science._data['scientist'])
 
     def test_chemical_element(self):
         result = self.church.science.chemical_element(name_only=True)
